@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServiceAluno {
@@ -13,31 +14,32 @@ public class ServiceAluno {
     @Autowired
     private AlunoRepository alunoRepository;
 
-    public void save(Aluno aluno) {
-        this.alunoRepository.save(aluno);
+    public Aluno save(Aluno aluno) {
+        return alunoRepository.save(aluno);
     }
 
     public List<Aluno> findAll() {
-        return this.alunoRepository.findAll();
+        return alunoRepository.findAll();
     }
 
     public Aluno getById(Long id) {
-        return this.alunoRepository.findById(id).get();
+        Optional<Aluno> alunoOpt = alunoRepository.findById(id);
+        return alunoOpt.orElse(null);
     }
 
     public void deleteById(Long id) {
-        this.alunoRepository.deleteById(id);
+        alunoRepository.deleteById(id);
     }
 
     public List<Aluno> findByStatusAtivo() {
-        return this.alunoRepository.findByStatusAtivo();
+        return alunoRepository.findByStatusAtivo();
     }
 
     public List<Aluno> findByStatusInativo() {
-        return this.alunoRepository.findByStatusInativo();
+        return alunoRepository.findByStatusInativo();
     }
 
     public List<Aluno> findByNomeContainingIgnoreCase(String nome) {
-        return this.alunoRepository.findByNomeContainingIgnoreCase(nome);
+        return alunoRepository.findByNomeContainingIgnoreCase(nome);
     }
 }

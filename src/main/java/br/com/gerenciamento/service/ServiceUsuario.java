@@ -16,19 +16,27 @@ public class ServiceUsuario {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public void salvarUsuario(Usuario user) throws Exception {
+    public Usuario salvarUsuario(Usuario user) throws Exception {
+        if (usuarioRepository.findByEmail(user.getEmail()) != null) {
+            throw new EmailExistsException("Este email já está cadastrado: " + user.getEmail());
+        }
+
         try {
-            if (usuarioRepository.findByEmail(user.getEmail()) != null) {
-                throw new EmailExistsException("Este email já esta cadastrado: " + user.getEmail());
-            }
             user.setSenha(Util.md5(user.getSenha()));
         } catch (NoSuchAlgorithmException e) {
-            throw new CriptoExistsException("Error na criptografia da senha");
+            throw new CriptoExistsException("Erro na criptografia da senha");
         }
-        usuarioRepository.save(user);
+
+        return usuarioRepository.save(user);
     }
 
     public Usuario loginUser(String user, String senha) {
-        return usuarioRepository.buscarLogin(user, senha);
+        // Supondo que senha já venha criptografada, ou você deve criptografar aqui antes
+        try {
+            String senhaCripto = Util.md5(senha);
+            return usuarioRepository.buscarLogin(user, senhaCripto);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
     }
 }

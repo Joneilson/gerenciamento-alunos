@@ -11,9 +11,10 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     @Query("SELECT a FROM Aluno a WHERE a.status = 'ATIVO' ")
     List<Aluno> findByStatusAtivo();
 
-    @Query("SELECT i FROM Aluno i WHERE i.status = 'INATIVO' ")
+    @Query("SELECT a FROM Aluno a WHERE a.status = 'INATIVO' ")
     List<Aluno> findByStatusInativo();
 
     List<Aluno> findByNomeContainingIgnoreCase(String nome);
 
+    Aluno findByMatricula(String matricula);  // método necessário para testes
 }

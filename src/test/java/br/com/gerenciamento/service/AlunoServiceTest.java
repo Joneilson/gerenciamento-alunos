@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,4 +45,36 @@ public class AlunoServiceTest {
         Assert.assertThrows(ConstraintViolationException.class, () -> {
                 this.serviceAluno.save(aluno);});
     }
+
+    @Test
+    public void findAllAlunos() {
+        Aluno aluno = new Aluno();
+        aluno.setNome("Aluno Listagem");
+        aluno.setTurno(Turno.NOTURNO);
+        aluno.setCurso(Curso.ADMINISTRACAO);
+        aluno.setStatus(Status.ATIVO);
+        aluno.setMatricula("999999");
+        this.serviceAluno.save(aluno);
+
+        List<Aluno> lista = this.serviceAluno.findAll();
+        Assert.assertFalse(lista.isEmpty());
+    }
+
+    @Test
+    public void atualizarAluno() {
+        Aluno aluno = new Aluno();
+        aluno.setNome("Nome Antigo");
+        aluno.setTurno(Turno.MATUTINO);
+        aluno.setCurso(Curso.DIREITO);
+        aluno.setStatus(Status.ATIVO);
+        aluno.setMatricula("888888");
+        this.serviceAluno.save(aluno);
+
+        aluno.setNome("Nome Novo");
+        this.serviceAluno.save(aluno);
+
+        Aluno alunoAtualizado = this.serviceAluno.getById(aluno.getId());
+        Assert.assertEquals("Nome Novo", alunoAtualizado.getNome());
+    }
+
 }
